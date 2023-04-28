@@ -1,4 +1,4 @@
-files=dir("./datasets/*tab");
+files=dir("./mosaic_data/*tab");
 files=files([2,3,5,7,14,16]);
 blh=[320,100,410,180,290,90];
 zg=0:10:1200;
