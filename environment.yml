@@ -1,0 +1,13 @@
+name: sterzinger-igel-2023-data
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - matplotlib
+  - tqdm
+  - xarray
+  - pyrams
+  - pint-xarray
