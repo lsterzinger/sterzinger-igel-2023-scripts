@@ -67,6 +67,8 @@ opts4 = setvaropts(opts4, "DateTime", "InputFormat", "yyyy-MM-dd'T'HH:mm:ss.SSS"
 opts4 = setvaropts(opts4, ["z", "FlagWater"], "ThousandsSeparator", ",");
 
 %% Make the figure
+blh = [320,100,410,180,510,300,910,80]; %mixed layer tops, meters
+
 figure('position',[700 300 1140 600])
 t=tiledlayout(2,3,'TileSpacing','tight');
 a1=nexttile; hold on
@@ -78,6 +80,8 @@ a6=nexttile; hold on
 
 colors=get(0,'defaultAxesColorOrder');
 for i=1:length(files)
+    zg=0:10:1200;
+    
     file=fullfile(files(i).folder,files(i).name);
     file2=dir(strcat(metdir,files(i).name(1:13),'*'));
     file3=[raddir,num2str(flights(i)),'_terrestrial_radiation.tab'];
@@ -193,6 +197,8 @@ for i=1:length(files)
         set(gca,'ColorOrderIndex',i)
         color=get(gca,'ColorOrderIndex');
         
+        zg = zg-blh(i);
+        blh(i)=0;
         plot(THavg,zg,'DisplayName',replace(files(i).name(1:13),'_','-'))
         h=plot(THavg(cbot:ctop),zg(cbot:ctop),'k-','LineWidth',1);
         legendlabel(h,'off')
@@ -204,8 +210,8 @@ for i=1:length(files)
                 legendlabel(h,'off')
             end
         end
-        h=plot(THavg(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
-        legendlabel(h,'off')
+        %h=plot(THavg(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
+        %legendlabel(h,'off')
         
         axes(a2)
         set(gca,'ColorOrderIndex',i)
@@ -215,14 +221,14 @@ for i=1:length(files)
             plot(Navg12(cbot2:ctop2),zg(cbot2:ctop2),'k-','LineWidth',1);
             if i==8; plot(Navg12(cbot3:ctop3),zg(cbot3:ctop3),'k-','LineWidth',1);end
         end
-        plot(Navg12(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
+        %plot(Navg12(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
                 
         if i~=6 %missing data for this one
             axes(a3)
             set(gca,'ColorOrderIndex',i)
             plot(Navg150,zg)
             plot(Navg150(cbot:ctop),zg(cbot:ctop),'k-','LineWidth',1);
-            plot(Navg150(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
+            %plot(Navg150(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
             if i==8
                 plot(Navg150(cbot2:ctop2),zg(cbot2:ctop2),'k-','LineWidth',1);
                 plot(Navg150(cbot3:ctop3),zg(cbot3:ctop3),'k-','LineWidth',1)
@@ -244,7 +250,7 @@ for i=1:length(files)
             rat=Navg150./Navg12;
             plot(rat,zg)
             plot(rat(cbot:ctop),zg(cbot:ctop),'k-','LineWidth',1);
-            plot(rat(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
+            %plot(rat(zg==blh(i)),blh(i),'ko','MarkerFaceColor',colors(color,:),'LineWidth',1);
             if i==8
                 plot(rat(cbot2:ctop2),zg(cbot2:ctop2),'k-','LineWidth',1)
                 plot(rat(cbot3:ctop3),zg(cbot3:ctop3),'k-','LineWidth',1)
@@ -259,19 +265,20 @@ grid on
 plotlabel('(a)')
 
 axes(a2)
-xlabel('N12 Concentration (# cm^{-3})')
+xlabel('N12 Conc. (# cm^{-3})')
 grid on
 plotlabel('(b)','upperright')
 set(a2,'XMinorTick','on','xlim',[0 1500])
-ylabel([a1,a2,a3,a6],'Height (m)','FontSize',15.4);
+ylabel([a1,a2,a3,a6],'Height w.r.t. BL Top (m)','FontSize',15.4);
 
 axes(a3)
-xlabel('N150 Concentration (# cm^{-3})')
+xlabel('N150 Conc. (# cm^{-3})')
 grid on
 plotlabel('(c)','upperright')
 set(a3,'XMinorTick','on','xlim',[0 100])
 
-ylim([a1,a2,a3],[0 1000])
+%ylim([a1,a2,a3],[0 1000])
+ylim([a1,a2,a3,a6],[-400 200])
 
 axes(a4)
 set(gca,'xscale','log')
@@ -279,8 +286,8 @@ grid on
 plotlabel('(d)')
 xlabel('Diameter (nm)')
 ylabel('Normalized dN/dlogD_p')
-lgd=legend(a1,'Location','northeast');
-uistack(lgd,'top')
+lgd=legend(a1);
+lgd.Layout.Tile='east';
 
 axes(a5)
 set(gca,'xscale','log')
