@@ -1,5 +1,5 @@
-# Plotting scripts for Sterzinger and Igel (2023)
-Python notebooks for Sterzinger and Igel (2023) (Update with link when ready)
+# Plotting scripts for Sterzinger and Igel (2024)
+Python notebooks for [Sterzinger and Igel (2024)](https://doi.org/10.5194/acp-24-3529-2024)
 
 First, set up the Conda environment
 
